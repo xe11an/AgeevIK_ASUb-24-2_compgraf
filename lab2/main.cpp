@@ -12,7 +12,7 @@ int main() {
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);   // если окно не создаётся - поставьте 1 (версия 4.1)
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);   
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -35,21 +35,21 @@ int main() {
     printf("This version OpenGL running is %s\n", glGetString(GL_VERSION));
     printf("This device OpenGL running is %s\n", glGetString(GL_RENDERER));
 
-    // ---------- данные пятиугольника (вариант 5) ----------
+    
     float points[] = {
-         0.0000f,  0.6000f, 0.0f,   // V0
-        -0.5706f,  0.1854f, 0.0f,   // V1
-        -0.3527f, -0.4854f, 0.0f,   // V2
-         0.3527f, -0.4854f, 0.0f,   // V3
-         0.5706f,  0.1854f, 0.0f    // V4
+         0.0000f,  0.6000f, 0.0f,   
+        -0.5706f,  0.1854f, 0.0f,   
+        -0.3527f, -0.4854f, 0.0f,   
+         0.3527f, -0.4854f, 0.0f,   
+         0.5706f,  0.1854f, 0.0f    
     };
-    GLuint indices[] = {            // 3 треугольника, нумерация с 0
+    GLuint indices[] = {            
         0, 1, 2,
         0, 2, 3,
         0, 3, 4
     };
 
-    // ---------- VAO, VBO, EBO ----------
+ 
     GLuint VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -67,18 +67,18 @@ int main() {
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);            // EBO отвязывать до этого нельзя
+    glBindVertexArray(0);            
 
-    // ---------- шейдеры из файлов (рабочая папка = папка проекта) ----------
+    
     Shader shader("shaders/shader.vert", "shaders/shader.frag");
     if (!shader.valid()) {
         glfwTerminate();
         return 1;
     }
 
-    // ---------- движение ----------
+    
     float posX = 0.0f, posY = 0.0f;
-    bool autoMove = true;            // пробел переключает авто/ручное
+    bool autoMove = true;            
     bool spaceWasDown = false;
     double lastTime = glfwGetTime();
 
@@ -93,26 +93,26 @@ int main() {
         spaceWasDown = spaceDown;
 
         if (autoMove) {
-            posX = 0.3f * std::cos(t);       // движение по кругу
+            posX = 0.3f * std::cos(t);      
             posY = 0.3f * std::sin(t);
         } else {
-            const float speed = 0.8f;        // WASD или стрелки
+            const float speed = 0.8f;        
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)    posY += speed * dt;
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)  posY -= speed * dt;
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)  posX -= speed * dt;
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) posX += speed * dt;
         }
-        // не даём фигуре выйти за окно
+        
         posX = std::fmax(-0.42f, std::fmin(0.42f, posX));
         posY = std::fmax(-0.51f, std::fmin(0.40f, posY));
 
-        // ---------- цвет от времени (задание №1) ----------
+       
         float r = std::sin(t)        * 0.5f + 0.5f;
         float g = std::sin(t + 2.1f) * 0.5f + 0.5f;
         float b = std::sin(t + 4.2f) * 0.5f + 0.5f;
 
-        // ---------- кадр ----------
-        glClearColor(0.8f, 0.2f, 0.7f, 1.0f);   // фон варианта 5
+        
+        glClearColor(0.8f, 0.2f, 0.7f, 1.0f);   
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.use();
@@ -120,7 +120,7 @@ int main() {
         shader.setVec4("ourColor", r, g, b, 1.0f);
 
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);   // 3 треугольника = 9 индексов
+        glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);  
 
         glfwSwapBuffers(window);
         glfwPollEvents();
